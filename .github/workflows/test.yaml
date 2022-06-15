@@ -1,0 +1,18 @@
+on:
+  push:
+    branches-ignore:
+      - renovate/**
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.18'
+          check-latest: true
+          cache: true
+      - run: gofmt -e -d -l .
+      - run: go test -v -timeout 20m ./...
