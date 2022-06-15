@@ -136,6 +136,7 @@ var errShutdown = fmt.Errorf("already shut down")
 // Write writes a chunk of data to the buffer. This function never blocks.
 func (b *BlockingFIFO) Write(p []byte) (int, error) {
 	b.mu.Lock()
+	defer b.mu.Unlock()
 	if b.writeClosed {
 		return 0, errShutdown
 	}
@@ -178,7 +179,6 @@ func (b *BlockingFIFO) Write(p []byte) (int, error) {
 		}
 		rr.fulfill.L.Unlock()
 	}
-	b.mu.Unlock()
 	return len(p), nil
 }
 
